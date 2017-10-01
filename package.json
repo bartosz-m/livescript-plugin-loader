@@ -1,0 +1,31 @@
+{
+  "name": "livescript-plugin-loader",
+  "version": "0.0.0",
+  "description": "Livescript Loader for Webpack with plugin support",
+  "main": "lib",
+  "scripts": {
+    "prepublishOnly": "npm run build && npm run test",
+    "build": "node_modules/.bin/lsc dev/build",
+    "develop": "node_modules/.bin/lsc dev/watch",
+    "test": "node ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:livescript-ide/livescript-plugins/plugin-loader.git"
+  },
+  "keywords": [
+    "livescript",
+    "webpack",
+    "loader"
+  ],
+  "author": "Bartosz Matuszewski <bartosz.wojciech.matuszewski@gmail.com>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "livescript": "git+https://github.com/gkz/LiveScript.git",
+    "loader-utils": "^1.1.0"
+  },
+  "devDependencies": {
+    "chokidar": "^1.7.0",
+    "fs-extra": "^4.0.2"
+  }
+}
