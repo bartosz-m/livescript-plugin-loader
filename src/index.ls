@@ -31,8 +31,8 @@ module.exports = (source) !->
         const: false
         header: false
 
-    query = LoaderUtils.parse-query @query
-    config <<< query
+    # query = LoaderUtils.parse-query @query
+    config <<< options
 
     ast = livescript.ast source
     output =  ast.compile-root config
