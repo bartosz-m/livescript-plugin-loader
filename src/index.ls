@@ -10,7 +10,7 @@ module.exports = (source) !->
     const options = LoaderUtils.get-options @
     for p in options[]plugins
         unless plugins[p]
-            plugins[p] = require "#{p}/plugin"
+            plugins[p] = require "#{p}/lib/plugin"
                 ..install livescript
 
     @cacheable?!
@@ -39,11 +39,7 @@ module.exports = (source) !->
     output.set-file filename
     result = output.to-string-with-source-map!
 
-    # result = livescript.compile source, config
     if config.map == 'none'
         return result
     result.map.set-source-content ls-request, source
-    # result.code += "\n//# sourceMappingURL=data:application/json;base64,#{ new Buffer result.map.to-string! .to-string 'base64' }\n"
-    # result.map._file = ls-request # Monkeypatch filename in sourcemap
-    # @callback null, result.code, JSON.parse(result.map.to-string!)
     @callback null, result.code, JSON.parse(result.map.to-string!)
