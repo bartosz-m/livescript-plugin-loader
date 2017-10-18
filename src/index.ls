@@ -38,7 +38,7 @@ module.exports = (source) !->
     compiler = new MacroCompiler
     # ast = livescript.ast source
     output =  compiler.compile-code source, config
-    output.set-file filename
+    # output.set-file filename
     result = output.to-string-with-source-map!
 
     if config.map == 'none'
