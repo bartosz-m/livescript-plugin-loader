@@ -7,12 +7,25 @@ require! {
 plugins = {}
 #require '@ehelon/livescript-transform-implicit-async' .install livescript
 
+load-plugin = (plugin, options) !->
+    plugin-name = plugin.name ? plugin
+    plugin-options = options ? plugin.options ? {}
+    unless plugins[plugin-name]
+        plugins[plugin-name] = require "#{plugin-name}/lib/plugin"
+            ..install livescript, plugin-options
+
+load-plugins = (loader-options) !->
+    if Array.is-array loader-options
+        for p in loader-options[]plugins
+            load-plugin p
+    else if loader-options instanceof Object
+        for name,options in loader-options[]plugins
+            load-plugin {name,options}
+        
+
 module.exports = (source) !->
     const options = LoaderUtils.get-options @
-    for p in options[]plugins
-        unless plugins[p]
-            plugins[p] = require "#{p}/lib/plugin"
-                ..install livescript
+    load-plugins options
 
     @cacheable?!
 
