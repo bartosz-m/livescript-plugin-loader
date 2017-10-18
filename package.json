@@ -21,7 +21,7 @@
   "author": "Bartosz Matuszewski <bartosz.wojciech.matuszewski@gmail.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "livescript": "git+https://github.com/gkz/LiveScript.git",
+    "livescript": "git+https://github.com/bartosz-m/LiveScript.git#macros",
     "loader-utils": "^1.1.0"
   },
   "devDependencies": {

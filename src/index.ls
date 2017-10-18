@@ -1,5 +1,6 @@
 require! {
     'livescript'
+    'livescript/lib/MacroCompiler'
     'loader-utils': LoaderUtils
 }
 
@@ -33,9 +34,10 @@ module.exports = (source) !->
 
     # query = LoaderUtils.parse-query @query
     config <<< options
-
-    ast = livescript.ast source
-    output =  ast.compile-root config
+    
+    compiler = new MacroCompiler
+    # ast = livescript.ast source
+    output =  compiler.compile-code source, config
     output.set-file filename
     result = output.to-string-with-source-map!
 
