@@ -9,6 +9,7 @@
     "develop": "node_modules/.bin/lsc dev/watch",
     "test": "node ./test"
   },
+  "homepage": "https://gitlab.com/livescript-ide/livescript-plugins/plugin-loader",
   "repository": {
     "type": "git",
     "url": "git@gitlab.com:livescript-ide/livescript-plugins/plugin-loader.git"
