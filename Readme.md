@@ -31,6 +31,9 @@ module.exports =
           ...  
 ```
 
+Tip: for source map in Firefox use 
+
+    devtool: 'source-map'
 
 ## Plugins
 
@@ -67,102 +70,6 @@ Or use objects instead of strings
           options: {dummy: true}
         ...
 ```
-
-## Macros
-This is just proof of concept implementation, totally experimental and disabled by default. To enable it set `macros` option to true.
-```livescript
-* loader: \livescript-plugin-loader
-  options:
-      macros: true
-```
-
-### Examples of macros
-Right now you can use them to do simple thing like those:
-
-generating debug information
-```livescript
-debug! = (...vars) -> 
-    str = vars.map -> "\\#it #it"
-    "[ #str ]"
-
-foo = \FOO
-bar = \BAR
-
-console.log ...debug! foo, bar
-# prints 'foo,FOO,bar,BAR'
-```
-
-in-place swapping
-```livescript
-swap! = (a,b) ->
-    tmp = "tmp$#{Date.now!}"
-    """
-      #tmp = #a
-      #a = #b
-      #b = #a
-    """
-    
-foo = \Bar
-bar = \Foo
-swap! foo,bar
-
-assert foo == \Foo
-asert bar == \Bar
-```
-
-iterating
-```livescript
-iterate! = (iterable, fn) ->
-    iterator = "iterator$#{Date.now!}"
-    itr = "itr$#{Date.now!}"
-    """
-        #iterator = #iterable[Symbol.iterator]!
-        until (#itr = #iterator.next!).done
-            #fn #itr.value
-    """
-      
-simple-set = new Set [1,2,3]
-log = -> console.log it
-iterate! simple-set, log
-```
-
-importing from es6 modules
-```livescript
-import-all! = (_module) ->
-    module-url = if _module.0 == "'"
-        then _module
-        else "\"#_module\""
-    "``import * from #module-url``"
-    
-import-all! react
-import-all! \semantic-ui-react
-```
-
-exporting es6 modules
-```livescript
-esm-export! = (a,b) ->
-    if b?
-      if a != "'default'"
-          throw Error "Cannot rename export #b to #a. Renaming exports is not supported yet"
-      "``export default #b``"
-    else
-        "export #a"
-        
-class Foo
-class Bar
-  
-esm-export! \default, Foo
-esm-export! Bar
-```
-
-### Warning
-Macros aren't production-ready use them at your own risk. I've added them to show what livescript would be able to achieve with a just a little bit of love.
-
-I've successfully compiled all my personal projects(there are no macros in them) with macros turn on so they shouldn't eat your hamster.
-
-### Todo
-- [ ] scope aware macros - right now they live in global scope
-- [ ] exporting and importing macros - right now they are per file
 
 # License
 [BSD-3-Clause](License.md)

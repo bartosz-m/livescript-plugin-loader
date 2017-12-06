@@ -1,8 +1,11 @@
 require! {
     'livescript'
-    'livescript/lib/MacroCompiler'
+    'livescript/lib/lexer'
+    'livescript-compiler/lib/livescript/Compiler'
     'loader-utils': LoaderUtils
 }
+
+compiler = Compiler.create livescript: livescript with {lexer}
 
 plugins = {}
 #require '@ehelon/livescript-transform-implicit-async' .install livescript
@@ -11,16 +14,20 @@ load-plugin = (plugin, options) !->
     plugin-name = plugin.name ? plugin
     plugin-options = options ? plugin.options ? {}
     unless plugins[plugin-name]
+        console.log "loading plugin #{plugin-name}"
         plugins[plugin-name] = require "#{plugin-name}/lib/plugin"
-            ..install livescript, plugin-options
+            ..install compiler, plugin-options
 
 load-plugins = (loader-options) !->
+    
     if Array.is-array loader-options
         for p in loader-options[]plugins
             load-plugin p
     else if loader-options instanceof Object
-        for name,options in loader-options[]plugins
+        for name,options of loader-options[]plugins
             load-plugin {name,options}
+    else
+        console.log "loading skipping"
         
 
 module.exports = (source) !->
@@ -40,24 +47,16 @@ module.exports = (source) !->
     config =
         filename: ls-request
         output-filename: js-request
-        map: \linked
-        bare: true
+        map: \embedded
         const: false
         header: false
 
     # query = LoaderUtils.parse-query @query
     config <<< options
-    result = 
-        if options?macros == true
-            compiler = new MacroCompiler
-            compiler.compile-code source, config
-        else
-            ast = livescript.ast source
-            output = ast.compile-root config
-            output.set-file filename
-            output.to-string-with-source-map!
-
+    result = compiler.compile source, config
+    # return result.code
     if config.map == 'none'
         return result
+    
     result.map.set-source-content ls-request, source
-    @callback null, result.code, JSON.parse(result.map.to-string!)
+    @callback null, result.code, result.map.to-JSON!

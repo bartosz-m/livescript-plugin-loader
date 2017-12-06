@@ -23,6 +23,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "livescript": "git+https://github.com/bartosz-m/LiveScript.git#macros",
+    "livescript-compiler": "0.0.32",
     "loader-utils": "^1.1.0"
   },
   "devDependencies": {
