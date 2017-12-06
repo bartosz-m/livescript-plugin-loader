@@ -8,31 +8,33 @@ require! {
 compiler = Compiler.create livescript: livescript with {lexer}
 
 plugins = {}
-#require '@ehelon/livescript-transform-implicit-async' .install livescript
 
 load-plugin = (plugin, options) !->
-    plugin-name = plugin.name ? plugin
-    plugin-options = options ? plugin.options ? {}
-    unless plugins[plugin-name]
-        console.log "loading plugin #{plugin-name}"
-        plugins[plugin-name] = require "#{plugin-name}/lib/plugin"
-            ..install compiler, plugin-options
+    try
+        plugin-name = plugin.name ? plugin
+        plugin-options = options ? plugin.options ? {}
+        unless plugins[plugin-name]
+            console.log "loading plugin #{plugin-name}"
+            unless plugin.install
+                plugin = plugins[plugin-name] = require "#{plugin-name}/lib/plugin"
+            plugin.install compiler, plugin-options
+    catch
+        console.log "Error loading plugin #{plugin-name}\n", e.stack
 
-load-plugins = (loader-options) !->
-    
-    if Array.is-array loader-options
-        for p in loader-options[]plugins
+load-plugins = (plugins) !->    
+    if Array.is-array plugins
+        for p in plugins
             load-plugin p
-    else if loader-options instanceof Object
-        for name,options of loader-options[]plugins
+    else if plugins instanceof Object
+        for name, options of plugins
             load-plugin {name,options}
     else
-        console.log "loading skipping"
+        console.log "Incorrect plugin config"
         
 
 module.exports = (source) !->
     const options = LoaderUtils.get-options @
-    load-plugins options
+    load-plugins options.plugins
 
     @cacheable?!
 
@@ -51,10 +53,8 @@ module.exports = (source) !->
         const: false
         header: false
 
-    # query = LoaderUtils.parse-query @query
     config <<< options
     result = compiler.compile source, config
-    # return result.code
     if config.map == 'none'
         return result
     
