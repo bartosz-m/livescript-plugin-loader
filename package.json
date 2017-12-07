@@ -1,6 +1,6 @@
 {
   "name": "livescript-plugin-loader",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Livescript Loader for Webpack with plugin support",
   "main": "lib",
   "scripts": {
