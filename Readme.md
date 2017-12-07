@@ -2,6 +2,8 @@
 
 I'm using it for my personal project so it is **probably** **almost** production ready - I'm talking about loader itself plugins are different story. 
 
+**Repository** on [github](https://github.com/bartosz-m/livescript-plugin-loader)
+
 # Plugins
 
 - [transform-esm](https://www.npmjs.com/package/livescript-transform-esm)  - es modules import & export
@@ -35,12 +37,12 @@ module.exports =
 ## Source maps
 In Firefox I advice to use
 ```livescript
-    devtool: 'source-map'
+devtool: 'source-map'
 ```
 
 and in Chrome
 ```livescript
-   devtool: 'eval-source-map'
+devtool: 'eval-source-map'
 ```
 
 ## Plugins
